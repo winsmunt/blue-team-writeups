@@ -60,7 +60,7 @@ The logs were present, but Splunk was not correctly identifying the boundaries b
 
 Some lines containing information such as the country and timestamp were being treated as separate events instead of being associated with the corresponding `[Network-log]` entry.
 
-![Broken event parsing](images/01-broken-event-parsing.png)
+![Broken event parsing](images/broken-event-parsing.png)
 
 This indicated that the problem was not the absence of data, but the way Splunk was parsing the incoming log stream.
 
@@ -87,7 +87,7 @@ sourcetype = network_logs
 interval = 1
 ```
 
-![Splunk inputs.conf](images/02-inputs-conf.png)
+![Splunk inputs.conf](images/inputs-conf.png)
 
 The important value for the next stage was:
 
@@ -119,7 +119,7 @@ SHOULD_LINEMERGE = true
 BREAK_ONLY_BEFORE = ^\[Network-log\]:
 ```
 
-![Splunk props.conf](images/03-props-conf.png)
+![Splunk props.conf](images/props-conf.png)
 
 ### Why this works
 
@@ -151,7 +151,7 @@ After configuring the event boundaries, I returned to Splunk Search and inspecte
 
 The network information and the second line containing the country and timestamp were now part of the same event.
 
-![Fixed event parsing](images/04-fixed-event-parsing.png)
+![Fixed event parsing](images/fixed-event-parsing.png)
 
 A correctly parsed event had a structure similar to:
 
@@ -204,7 +204,7 @@ FORMAT = Username::$1 Department::$2 Domain::$3 URI::$4 SourceIP::$5 Country::$6
 WRITE_META = true
 ```
 
-![Splunk transforms.conf](images/05-transforms-conf.png)
+![Splunk transforms.conf](images/transforms-conf.png)
 
 The important part of the configuration is the relationship between the regex capture groups and the extracted fields:
 
@@ -245,7 +245,7 @@ INDEXED = true
 INDEXED = true
 ```
 
-![Splunk fields.conf](images/06-fields-conf.png)
+![Splunk fields.conf](images/fields-conf.png)
 
 The fields available for analysis were therefore:
 
@@ -303,7 +303,7 @@ SourceIP
 Country
 ```
 
-![Field extraction validation](images/07-field-extraction-validation.png)
+![Field extraction validation](images/field-extraction-validation.png)
 
 This was useful for troubleshooting because it separated two potential problems:
 
@@ -326,7 +326,7 @@ index=main
 | sort -count
 ```
 
-![User activity analysis](images/08-user-activity-analysis.png)
+![User activity analysis](images/user-activity-analysis.png)
 
 The results showed:
 
