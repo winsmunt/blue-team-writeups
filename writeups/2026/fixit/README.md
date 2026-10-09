@@ -119,7 +119,7 @@ SHOULD_LINEMERGE = true
 BREAK_ONLY_BEFORE = ^\[Network-log\]:
 ```
 
-![Splunk props.conf](images/props-conf.png)
+![Splunk props.conf](images/props-confi.png)
 
 ### Why this works
 
