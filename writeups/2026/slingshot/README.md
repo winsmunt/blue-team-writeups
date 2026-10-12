@@ -55,6 +55,8 @@ The attacker was identified by the following IP address:
 
 I used this IP address during the rest of the investigation to filter the attacker's activity.
 
+![Attacker identification](images/attacker-identification.png)
+
 ---
 
 ## 2. Reconnaissance
@@ -83,7 +85,7 @@ Mozilla/5.0 (Gobuster)
 
 Gobuster is commonly used to discover hidden files and directories on web servers.
 
-![Gobuster enumeration](images/gobuster-enumeration.png)
+![Directory enumeration](images/directory-enumeration.png)
 
 The attacker generated a large number of requests during this activity.
 
@@ -121,15 +123,7 @@ Mozilla/4.0 (Hydra)
 
 This indicated that **Hydra** was being used for the brute-force attack.
 
-I filtered the Apache logs for requests to:
-
-```text
-/admin-login.php
-```
-
-and reviewed the authentication activity.
-
-![Admin brute force](images/admin-brute-force.png)
+![Hydra brute force](images/hydra-brute-force.png)
 
 The attacker eventually found valid credentials:
 
@@ -157,7 +151,7 @@ easy-simple-php-webshell.php
 
 The upload request could be identified inside the HTTP request body.
 
-![Web shell upload](images/web-shell-upload.png)
+![Web shell upload](images/webshell-upload.png)
 
 A flag was also included inside the uploaded file:
 
@@ -192,7 +186,7 @@ pwd
 ls
 ```
 
-![Web shell commands](images/web-shell-commands.png)
+![Web shell command execution](images/webshell-command-execution.png)
 
 This confirmed that the attacker achieved command execution on the compromised web server.
 
@@ -222,7 +216,7 @@ This file contained database configuration information that could be used to acc
 
 ---
 
-## 8. phpMyAdmin Activity
+## 8. Database Manipulation
 
 After obtaining the database credentials, the attacker accessed phpMyAdmin.
 
@@ -232,19 +226,7 @@ The database involved in the attack was:
 customer_credit_cards
 ```
 
-This showed that the attack had moved from web server compromise to database access.
-
----
-
-## 9. Database Manipulation
-
-I searched for activity related to:
-
-```text
-import.php
-```
-
-and found a request to:
+I then found suspicious activity related to:
 
 ```text
 /phpmyadmin/import.php
@@ -252,7 +234,7 @@ and found a request to:
 
 The HTTP request body contained an encoded SQL query.
 
-![Database import request](images/database-import-request.png)
+![Database manipulation](images/database-manipulation.png)
 
 The request body was URL encoded, so I copied the value into CyberChef and used:
 
@@ -262,7 +244,7 @@ URL Decode
 
 After decoding the request, the SQL query became readable.
 
-![URL decoded SQL query](images/url-decoded-sql-query.png)
+![SQL request decoding](images/sql-request-decoding.png)
 
 The attacker inserted the following value into the database:
 
