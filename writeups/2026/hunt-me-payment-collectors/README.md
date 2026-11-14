@@ -1,8 +1,8 @@
-# Hunt Me I: Payment Collectors — Phishing to DNS Exfiltration
+# Hunt Me I: Payment Collectors - Phishing to DNS Exfiltration
 
 **Blue Team investigation | Elastic Discover · Sysmon · PowerShell Operational Logs · CyberChef**
 
-> **Environment:** TryHackMe — *Hunt Me I: Payment Collectors* (simulated incident). This is an evidence-led incident investigation, not a question-and-answer walkthrough. No original malware, confidential documents, event-log exports, or challenge flag are included.
+> **Environment:** TryHackMe - *Hunt Me I: Payment Collectors* (simulated incident). This is an evidence-led incident investigation, not a question-and-answer walkthrough. No original malware, confidential documents, event-log exports, or challenge flag are included.
 
 ## Executive Summary
 
@@ -11,18 +11,6 @@ A finance user at the fictional **SSF** organization received an invoice-themed 
 A Base64 decode of captured encoded material exposed ZIP-like `PK` bytes and the names of the staged documents. Taken together, the evidence strongly supports **an attempted data-exfiltration sequence using DNS queries**, while the available screenshots alone do not establish successful transmission or receipt of the data by an attacker-controlled nameserver.
 
 **Investigation outcome:** Malicious activity identified from email attachment through collection/staging and probable DNS-based exfiltration. The success of the reverse-shell connection and completion of off-host data transfer remain **unverified** from the supplied artifacts.
-
-## Contents
-
-- [Scope and Evidence](#scope-and-evidence)
-- [Fast Reference: What to Look For](#fast-reference-what-to-look-for)
-- [Attack Timeline](#attack-timeline)
-- [Investigation and Supporting Evidence](#investigation-and-supporting-evidence)
-- [Detection Queries](#detection-queries)
-- [MITRE ATT&CK Mapping](#mitre-attck-mapping)
-- [Indicators and Artifacts](#indicators-and-artifacts)
-- [Assessment and Next Steps](#assessment-and-next-steps)
-- [Lessons Learned](#lessons-learned)
 
 ## Scope and Evidence
 
@@ -221,15 +209,15 @@ winlog.event_id: 1 AND process.name: "nslookup.exe" AND process.command_line: *h
 
 | Tactic | Technique | Relationship to the evidence | Confidence |
 | --- | --- | --- | --- |
-| Initial Access | [T1566.001 — Phishing: Spearphishing Attachment](https://attack.mitre.org/techniques/T1566/001/) | Invoice-themed attachment in Outlook; phishing context supplied by the scenario | High for attachment; delivery/interaction details not fully shown |
-| Execution | [T1059.001 — Command and Scripting Interpreter: PowerShell](https://attack.mitre.org/techniques/T1059/001/) | PowerShell download/execute and post-access commands | High |
-| Command and Control / Tool Transfer | [T1105 — Ingress Tool Transfer](https://attack.mitre.org/techniques/T1105/) | Download of Powercat and PowerView scripts | High for observed transfer commands |
-| Discovery | [T1082 — System Information Discovery](https://attack.mitre.org/techniques/T1082/) | `systeminfo.exe` launched from PowerShell | High |
-| Collection | [T1039 — Data from Network Shared Drive](https://attack.mitre.org/techniques/T1039/) | Finance share mapping followed by file staging | Plausible; exact copy origin not directly shown |
-| Collection | [T1074.001 — Data Staged: Local Data Staging](https://attack.mitre.org/techniques/T1074/001/) | `Downloads\exfiltration` directory and files | High |
-| Collection | [T1560 — Archive Collected Data](https://attack.mitre.org/techniques/T1560/) | ZIP archive created in staging folder | High for archive creation; method not fully recorded |
-| Exfiltration | [T1048 — Exfiltration Over Alternative Protocol](https://attack.mitre.org/techniques/T1048/) | Encoded-looking data in repeated DNS-lookup command lines | High for attempted behavior; completion unverified |
-| Exfiltration | [T1048.003 — Exfiltration Over Unencrypted Non-C2 Protocol](https://attack.mitre.org/techniques/T1048/003/) | DNS is a likely carrier of the encoded data | Reasonable sub-technique hypothesis; DNS flow not independently captured |
+| Initial Access | [T1566.001 - Phishing: Spearphishing Attachment](https://attack.mitre.org/techniques/T1566/001/) | Invoice-themed attachment in Outlook; phishing context supplied by the scenario | High for attachment; delivery/interaction details not fully shown |
+| Execution | [T1059.001 - Command and Scripting Interpreter: PowerShell](https://attack.mitre.org/techniques/T1059/001/) | PowerShell download/execute and post-access commands | High |
+| Command and Control / Tool Transfer | [T1105 - Ingress Tool Transfer](https://attack.mitre.org/techniques/T1105/) | Download of Powercat and PowerView scripts | High for observed transfer commands |
+| Discovery | [T1082 - System Information Discovery](https://attack.mitre.org/techniques/T1082/) | `systeminfo.exe` launched from PowerShell | High |
+| Collection | [T1039 - Data from Network Shared Drive](https://attack.mitre.org/techniques/T1039/) | Finance share mapping followed by file staging | Plausible; exact copy origin not directly shown |
+| Collection | [T1074.001 - Data Staged: Local Data Staging](https://attack.mitre.org/techniques/T1074/001/) | `Downloads\exfiltration` directory and files | High |
+| Collection | [T1560 - Archive Collected Data](https://attack.mitre.org/techniques/T1560/) | ZIP archive created in staging folder | High for archive creation; method not fully recorded |
+| Exfiltration | [T1048 - Exfiltration Over Alternative Protocol](https://attack.mitre.org/techniques/T1048/) | Encoded-looking data in repeated DNS-lookup command lines | High for attempted behavior; completion unverified |
+| Exfiltration | [T1048.003 - Exfiltration Over Unencrypted Non-C2 Protocol](https://attack.mitre.org/techniques/T1048/003/) | DNS is a likely carrier of the encoded data | Reasonable sub-technique hypothesis; DNS flow not independently captured |
 
 *Note:* This mapping describes **observable behaviors**, not an assertion that every tactic in the ATT&CK chain was proven. In particular, a downloaded PowerView script alone is not proof of specific domain-account enumeration commands.
 
@@ -287,4 +275,4 @@ These are **investigation indicators from a training dataset**, not a current re
 
 ---
 
-**Lab source:** [TryHackMe — Hunt Me I: Payment Collectors](https://tryhackme.com/) · **Focus:** Windows threat hunting, endpoint telemetry correlation, suspicious PowerShell, local staging, and DNS exfiltration analysis.
+**Lab source:** [TryHackMe - Hunt Me I: Payment Collectors](https://tryhackme.com/) · **Focus:** Windows threat hunting, endpoint telemetry correlation, suspicious PowerShell, local staging, and DNS exfiltration analysis.
