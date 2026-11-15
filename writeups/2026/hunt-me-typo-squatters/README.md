@@ -1,6 +1,6 @@
 # From Typosquatting to Ransomware: A Multi-Stage SOC Investigation
 
-**Lab:** TryHackMe — Hunt Me II: Typo Squatters  
+**Lab:** TryHackMe - Hunt Me II: Typo Squatters  
 **Focus:** Threat hunting, endpoint telemetry, PowerShell, credential access, lateral movement, Active Directory, ransomware  
 **Platform:** Elastic / Kibana Discover  
 **Data:** Windows event logs and Sysmon telemetry from a controlled training environment
@@ -11,7 +11,7 @@
 
 A software developer downloaded what appeared to be a 7-Zip installer from a **typosquatted domain** (`www.7zipp.org`). The downloaded MSI was associated with a PowerShell execution chain that retrieved another script (`7z.ps1`). The script also installed a legitimate copy of 7-Zip, potentially providing cover for suspicious activity. Subsequent telemetry revealed a newly created Windows service, credential-access tooling, pass-the-hash activity, changes involving other accounts and hosts, an attempted DCSync operation, and ransomware-like file modifications associated with `bomb.exe`.
 
-The investigation demonstrates how a seemingly routine software download can become an entry point for a broader attack. The strongest evidence comes from correlating process creation, parent–child relationships, PowerShell activity, service installation, and file creation events—not from treating any single command as conclusive.
+The investigation demonstrates how a seemingly routine software download can become an entry point for a broader attack. The strongest evidence comes from correlating process creation, parent–child relationships, PowerShell activity, service installation, and file creation events-not from treating any single command as conclusive.
 
 ## Investigation Questions
 
@@ -181,15 +181,15 @@ The following is an **analytical mapping** based on the behaviors described; it 
 
 | Tactic | Technique | Why it is relevant |
 | --- | --- | --- |
-| Execution | **T1204 — User Execution** *(conditional)* | The user reportedly ran the trojanized installer; confirm the user-initiated process chain |
-| Defense Evasion | **T1036 — Masquerading** | Software impersonated a legitimate 7-Zip installer |
-| Execution | **T1059.001 — PowerShell** | Remote script retrieval and execution |
-| Persistence / Privilege Escalation | **T1543.003 — Windows Service** | `7zService` created and started |
-| Credential Access | **T1003.001 — LSASS Memory** | Credential-dumping activity and associated tooling |
-| Defense Evasion / Lateral Movement | **T1550.002 — Pass the Hash** | `sekurlsa::pth` command |
-| Persistence | **T1098 — Account Manipulation** | Password change activity; intent and success require correlation |
-| Credential Access | **T1003.006 — DCSync** | `Invoke-SharpKatz` DCSync attempt |
-| Impact | **T1486 — Data Encrypted for Impact** | `bomb.exe` and `.777zzz` file artifacts; lab reports encryption |
+| Execution | **T1204 - User Execution** *(conditional)* | The user reportedly ran the trojanized installer; confirm the user-initiated process chain |
+| Defense Evasion | **T1036 - Masquerading** | Software impersonated a legitimate 7-Zip installer |
+| Execution | **T1059.001 - PowerShell** | Remote script retrieval and execution |
+| Persistence / Privilege Escalation | **T1543.003 - Windows Service** | `7zService` created and started |
+| Credential Access | **T1003.001 - LSASS Memory** | Credential-dumping activity and associated tooling |
+| Defense Evasion / Lateral Movement | **T1550.002 - Pass the Hash** | `sekurlsa::pth` command |
+| Persistence | **T1098 - Account Manipulation** | Password change activity; intent and success require correlation |
+| Credential Access | **T1003.006 - DCSync** | `Invoke-SharpKatz` DCSync attempt |
+| Impact | **T1486 - Data Encrypted for Impact** | `bomb.exe` and `.777zzz` file artifacts; lab reports encryption |
 
 **Mapping caveat:** The initial access technique should not be stated more specifically than the evidence supports. The observed download is clear; whether the initial delivery involved phishing or another lure is not fully established in the supplied screenshots. User Execution is included conditionally and should be corroborated through the installer process chain.
 
@@ -229,14 +229,6 @@ These are **lab-specific indicators**; prioritize the behavioral detection patte
 - How to recognize a DCSync attempt without claiming success solely from the presence of a command.
 - How to communicate ransomware impact while separating file-system telemetry from evidence of actual encryption.
 
-## Limitations and Reporting Notes
-
-- This investigation is based on selected screenshots, notes and lab-provided answers, not a full raw-event export.
-- Some screenshots document searches or commands rather than the successful completion of the corresponding activity.
-- The lab reports specific credential values and counts, but these are deliberately not reproduced as exposed secrets in this public case study.
-- Screenshots containing passwords or hashes **must be redacted before uploading** to GitHub.
-- The evidence should not be construed as independent verification of threat infrastructure or malware behavior outside the training environment.
-
 ## Lab Source
 
-TryHackMe — **Hunt Me II: Typo Squatters** (SOC Level 2 / Threat Hunting). This report is an independently organized investigation summary, not a question-by-question answer key.
+TryHackMe - **Hunt Me II: Typo Squatters** (SOC Level 2 / Threat Hunting). This report is an independently organized investigation summary, not a question-by-question answer key.
